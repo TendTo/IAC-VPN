@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+[Interface]
+Address = {{ wireguard.server.vpn_addr }}/{{ wireguard.net | regex_replace('[^/]+/(\d+)', '\\1') }}
+ListenPort = {{ wireguard.server.port }}
+PrivateKey = {{ wireguard.server.sk }}
+
+PostUp = iptables -I INPUT -m state --state NEW -p udp --dport {{ wireguard.server.port }} -j ACCEPT
+PostUP = iptables -I FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if wireguard.internet %}
+PostUp = iptables -I FORWARD -i %i -o {{ wireguard.server.out_interface }} -j ACCEPT
+PostUp = iptables -I POSTROUTING -t nat -s {{ wireguard.net }} -o {{ wireguard.server.out_interface }} -j MASQUERADE
+{% endif %}
+
+PostDown = iptables -D INPUT -m state --state NEW -p udp --dport {{ wireguard.server.port }} -j ACCEPT
+PostDown = iptables -D FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if wireguard.internet %}
+PostDown = iptables -D FORWARD -i %i -o {{ wireguard.server.out_interface }} -j ACCEPT
+PostDown = iptables -t nat -D POSTROUTING -s {{ wireguard.net }} -o {{ wireguard.server.out_interface }} -j MASQUERADE
+{% endif %}
+
+[Peer]
+PublicKey = {{ wireguard.client.pk }}
+AllowedIPs = {{ wireguard.client.vpn_addr }}

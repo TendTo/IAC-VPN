@@ -1,0 +1,30 @@
+all:
+  hosts:
+    vpn_server:
+      ansible_host: 150.150.150.150 # server's public ip (populated automatically)
+      ansible_user: ubuntu # server's user used for the ssh login
+    vpn_client:
+      ansible_host: localhost # client's ip. Should be leaved to localhost if you want to use the script locally
+      ansible_connection: local # whether to setup the local machine as the vpn client
+  vars:
+    wireguard:
+      internet: true # if true, the server will be configured to forward the traffic from the clients to the internet
+      net: 10.0.0.0/24 # network used by the vpn
+      server:
+        sk: !vault | # private key of the server, encrypted with ansible vault
+          $ANSIBLE_VAULT;1.1;AES256
+          31393362353665373932373935373712613464373163366132353063666234373531616562313137
+          ...
+          6230363465383461383164336564376133326539333534376534
+        pk: mpuKEyJXo/6WltxtIyC32ZVJaK275DBHuL25QbpWhUU=
+        port: 51820 # port the vpn clients will connect to
+        vpn_addr: "10.0.0.1" # address of the vpn server
+        out_interface: ens3 # interface the server uses to connect to the internet
+      client:
+        pk: PIVPW3c/VGqHWodrwNKaEadCxFFp015Prtn+aS9mdzA= # public key of the client
+        sk: !vault | # private key of the client, encrypted with ansible vault
+          $ANSIBLE_VAULT;1.1;AES256
+          34323233326165123861323962333739653339656365326262356463383734376639363962646631
+          ...
+          303766303533613411303463643561356po29438633934356332
+        vpn_addr: "10.0.0.2" # address of the vpn client

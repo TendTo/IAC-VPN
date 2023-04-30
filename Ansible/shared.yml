@@ -1,0 +1,24 @@
+---
+- name: Install wireguard (Debian)
+  become: true
+  ansible.builtin.apt:
+    package: wireguard
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Install wireguard (RedHat)
+  become: true
+  ansible.builtin.dnf:
+    name: wireguard-tools
+    state: present
+    update_cache: true
+  when: ansible_os_family == "RedHat"
+
+- name: Install wireguard (Arch)
+  become: true
+  community.general.pacman:
+    name: wireguard-tools
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Archlinux"
