@@ -1,5 +1,7 @@
 # Infrastructure as Code (IAC) to setup a VPN
 
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/TendTo/IAC-VPN/releases/download/0.0.1/Oracle.zip)
+
 Create your own VPN with a bunch of commands using this Infrastructure as Code (IAC) project.
 
 ## Requirements
