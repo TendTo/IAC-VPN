@@ -47,3 +47,6 @@ __pycache__/
 
 # VsCode
 .vscode/
+
+# Zip files
+*.zip

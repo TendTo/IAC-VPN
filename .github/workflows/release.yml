@@ -1,0 +1,24 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Zip files
+        run: |
+          zip -jr Openstack.zip Terraform/openstack/openstack.tf
+          zip -jr Oracle.zip Terraform/oracle/oracle.tf
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.zip"
