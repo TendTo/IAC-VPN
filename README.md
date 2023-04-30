@@ -204,6 +204,8 @@ provider "openstack" {
 }
 ```
 
+[Learn more about openstack configuration](https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#configuration-files)
+
 ### Oracle
 
 [Official guide](https://docs.oracle.com/en/learn/intro_terraform_linux)
@@ -230,8 +232,12 @@ region=eu-frankfurt-1
 
 If you don't have it, check [how to get keys and ocids](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm).
 
-## Supported cloud providers
+## Supported cloud providers and documentation
 
 - [Openstack](https://www.openstack.org/)
+  - [Terraform openstack provider](https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs)
+  - [Openstack Configuration](https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#configuration-files)
 - [Oracle](https://www.oracle.com/cloud/)
+  - [Terraform oci provider](https://registry.terraform.io/providers/hashicorp/oci/latest)
   - [Official guide](https://docs.oracle.com/en/learn/intro_terraform_linux)
+  - [How to get keys and ocids](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm)
