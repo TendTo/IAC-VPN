@@ -27,6 +27,31 @@ The script will usually be run two times: once to create the infrastructure, and
 ./run.sh wireguard -y -a --ask-become-pass
 ```
 
+### Usage
+
+```shell
+Synopsis:
+   ./run.sh [OPTIONS] <provider> [additional arguments]
+
+Description:
+    Handle all the steps to setup the infrastructure and initialize wireguard.
+
+ Arguments:
+    <provider>                    The provider to use. Valid options are: [openstack, oracle, wireguard].
+                                  The last one will use Ansible to install and configure wireguard.
+                                  Must be called after one of the other options.
+    [additional arguments]        Additional arguments to pass to the provider
+
+ Options:
+    -h, --help                    Help section
+    -d, --destroy                 When using a terraform provider, destroy the infrastructure
+    -k, --key                     Name oo the private key to create or use (key.pem)
+    -a, --ask-vault-pass          Ansible will ask for a password to decrypt the vault with
+    -y, --yes                     Answer yes to all questions
+    -n, --no-color                Disble color output
+    -v, --version                 Script information
+```
+
 ## Ansible
 
 Ansible is used to setup the VPN on the computing instances.
