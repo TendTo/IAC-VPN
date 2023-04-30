@@ -62,12 +62,12 @@ all:
         vpn_addr: "10.0.0.1" # address of the vpn server
         out_interface: ens3 # interface the server uses to connect to the internet
       client:
-        pk: PIVPW3c/VGqHWodrwNKaEadCxFFp015Prtn+aS9mdzA= # public key of the client
         sk: !vault | # private key of the client, encrypted with ansible vault
           $ANSIBLE_VAULT;1.1;AES256
           34323233326165123861323962333739653339656365326262356463383734376639363962646631
           ...
           303766303533613411303463643561356po29438633934356332
+        pk: PIVPW3c/VGqHWodrwNKaEadCxFFp015Prtn+aS9mdzA= # public key of the client
         vpn_addr: "10.0.0.2" # address of the vpn client
 ```
 
@@ -76,12 +76,12 @@ They can both be generated with the `wg` command.
 
 ```shell
 # Generate a private key
-wg genkey
+wg genkey > private_key
 ```
 
 ```shell
 # Generate a public key from a private key
-wg pubkey < private_key
+wg pubkey < private_key > public_key
 ```
 
 To store the private keys in the `inventory.yml` file, you need to encrypt them with ansible vault.
@@ -99,6 +99,7 @@ If you want to use a cloud provider, may use the terraform configurations in the
 For more information about each provider, check
 
 - [Openstack](#openstack)
+- [Oracle](#oracle)
 
 ### Configuration
 
