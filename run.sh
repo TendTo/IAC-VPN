@@ -9,7 +9,7 @@
 #%    Handle all the steps to setup the infrastructure and initialize wireguard.
 #%
 #% ARGUMENTS
-#%    <provider>                    The provider to use. Valid options are: [openstack, oracle, wireguard].
+#%    <provider>                    The provider to use. Valid options are: [openstack, oracle, gcp, wireguard].
 #%                                  The last one will use Ansible to install and configure wireguard.
 #%                                  Must be called after one of the other options.
 #%    [additional arguments]        Additional arguments to pass to the provider
@@ -191,9 +191,9 @@ function parse_args
     terraform_yes=$( [[ -z "${yes}" ]] && echo "" || echo "-auto-approve" )
 
     # Validate required args
-    if ! [[ "$provider" =~ ^(oracle|openstack|wireguard)$ ]]; then
+    if ! [[ "$provider" =~ ^(oracle|openstack|gcp|wireguard)$ ]]; then
         >&2 echo "Invalid argument 'provider': ${provider:-'not set'}. 
-        Must be one of: [oracle, openstack, wireguard]"
+        Must be one of: [oracle, openstack, gcp, wireguard]"
         usage
         exit;
     fi
@@ -227,8 +227,10 @@ function fun_terraform() {
         terraform apply $additional_args $terraform_yes
         terraform output -raw private_key > "../../Ansible/${key_name}"
         chmod 600 "../../Ansible/${key_name}"
+        uername=$(terraform output -raw username)
         public_ip=$(terraform output -raw public_ip)
         sed -i "s/ansible_host: *[^#]*/ansible_host: ${public_ip} /" ../../Ansible/inventory.yml
+        sed -i "s/ansible_user: *[^#]*/ansible_user: ${uername} /" ../../Ansible/inventory.yml
     fi
     cd "${origin_cwd}"
 }
@@ -254,7 +256,7 @@ function main() {
     fi
 
     case "${provider}" in
-        openstack | oracle )
+        openstack | oracle | gcp )
             fun_terraform
         ;;
         wireguard )

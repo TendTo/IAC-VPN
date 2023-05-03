@@ -86,7 +86,7 @@ terraform {
   required_providers {
     oci = {
       source  = "oracle/oci"
-      version = "~> 4.118.0"
+      version = ">= 4.118.0"
     }
   }
 }
@@ -255,6 +255,9 @@ resource "tls_private_key" "iac_vpn_ssh_key" {
 # ===============================
 # Outputs
 # ===============================
+output "username" {
+  value = "ubuntu"
+}
 output "private_key" {
   value     = var.iac_vpn_public_key != "" ? null : one(tls_private_key.iac_vpn_ssh_key).private_key_pem
   sensitive = true

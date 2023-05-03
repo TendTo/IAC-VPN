@@ -16,6 +16,11 @@ variable "iac_vpn_instance_flavor_name" {
 # ===============================
 # Terraform optional variables
 # ===============================
+variable "iac_vpn_cloud" {
+  type = string
+  description = "Cloud authentication credentials to use. It should be specified in ~/.config/openstack/clouds.yaml"
+  default = ""
+}
 variable "iac_vpn_subnet_cidr" {
   type        = string
   description = "CIDR of the subnet to create. Meaning the range of IP addresses that will be available for the instances in the subnet."
@@ -32,14 +37,14 @@ terraform {
   required_providers {
     openstack = {
       source  = "terraform-provider-openstack/openstack"
-      version = "~> 1.48.0"
+      version = ">= 1.48.0"
     }
   }
 }
 
 # Configure the OpenStack Provider and choose the cloud to use
 provider "openstack" {
-  cloud = "" # Name of the cloud to use, usually set in ~/.config/openstack/clouds.yaml.
+  cloud = var.iac_vpn_cloud # Name of the cloud to use, usually set in ~/.config/openstack/clouds.yaml.
   # Alternatively, you can specify the credentials below.
 
   # user_name   = "admin"
@@ -140,10 +145,13 @@ resource "openstack_compute_instance_v2" "iac_vpn_instance" {
 # ===============================
 # Outputs
 # ===============================
+output "username" {
+  value = "ubuntu"
+}
 output "private_key" {
   value     = openstack_compute_keypair_v2.iac_vpn_keypair.private_key
   sensitive = true
 }
 output "public_ip" {
-  value = openstack_networking_floatingip_v2.iac_vpn_public_ip.address
+  value = openstack_networking_floatingip_v2.iac_vpn_public_ip
 }

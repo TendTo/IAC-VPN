@@ -15,7 +15,8 @@ Create your own VPN with a bunch of commands using this Infrastructure as Code (
 
 All operations have been made more convenient with a script.
 
-Before running it, though, you may want to explore both the [Ansible configuration](#configuration) and the [Terraform configuration](#configuration-1) to see if you need to override some variables.
+Before running it, though, you may want to explore both the [Ansible configuration](#configuration) and the [Terraform configuration](#configuration-1) to see if you need to override some variables.  
+Also, when you are done, make sure to run `terraform init` in the directory of the provider you want to use to download the required modules.
 
 The script will usually be run two times: once to create the infrastructure, and once to setup the VPN using wireguard.
 
@@ -182,6 +183,17 @@ terraform destroy
 
 ## Terraform providers configuration
 
+### GCP
+
+To configure the GCP provider, you need to override the following variables in the `Terraform/gcp.tfvars` file:
+
+- iac_vpn_gcp_project
+- iac_vpn_region
+- iac_vpn_zone
+
+The script presupposes you have configured the gcloud cli login with the correct project and zone.
+If in doubt, check this [guide](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference)
+
 ### Openstack
 
 To configure the Openstack provider, you need to override the following variables in the `Terraform/openstack.` file:
@@ -203,6 +215,14 @@ provider "openstack" {
   # password    = "pwd"
   # auth_url    = "http://myauthurl:5000/v2.0"
   # region      = "RegionOne"
+}
+```
+
+Finally, if you plan on using the `run.sh` script, make sure the _username_ output is correct.
+
+```tf
+output "username" {
+  value = "ubuntu"
 }
 ```
 
@@ -234,8 +254,20 @@ region=eu-frankfurt-1
 
 If you don't have it, check [how to get keys and ocids](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm).
 
+Finally, if you plan on using the `run.sh` script, make sure the _username_ output is correct.
+
+```tf
+output "username" {
+  value = "ubuntu"
+}
+```
+
 ## Supported cloud providers and documentation
 
+- [GCP](https://cloud.google.com/)
+  - [Terraform gcp provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
+  - [Official guide](https://cloud.google.com/community/tutorials/getting-started-on-gcp-with-terraform)
+  - [Google Provider Configuration Reference](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference)
 - [Openstack](https://www.openstack.org/)
   - [Terraform openstack provider](https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs)
   - [Openstack Configuration](https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#configuration-files)
