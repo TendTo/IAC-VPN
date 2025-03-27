@@ -48,7 +48,7 @@ Description:
  Options:
     -h, --help                    Help section
     -d, --destroy                 When using a terraform provider, destroy the infrastructure
-    -k, --key                     Name oo the private key to create or use (key.pem)
+    -k, --key                     Name of the private key to create or use (key.pem)
     -a, --ask-vault-pass          Ansible will ask for a password to decrypt the vault with
     -y, --yes                     Answer yes to all questions
     -n, --no-color                Disble color output

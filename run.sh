@@ -17,7 +17,7 @@
 #% OPTIONS
 #%    -h, --help                    Help section
 #%    -d, --destroy                 When using a terraform provider, destroy the infrastructure
-#%    -k, --key                     Name oo the private key to create or use (key.pem)
+#%    -k, --key                     Name of the private key to create or use (key.pem)
 #%    -a, --ask-vault-pass          Ansible will ask for a password to decrypt the vault with
 #%    -y, --yes                     Answer yes to all questions
 #%    -n, --no-color                Disble color output
@@ -227,10 +227,10 @@ function fun_terraform() {
         terraform apply $additional_args $terraform_yes
         terraform output -raw private_key > "../../Ansible/${key_name}"
         chmod 600 "../../Ansible/${key_name}"
-        uername=$(terraform output -raw username)
+        username=$(terraform output -raw username)
         public_ip=$(terraform output -raw public_ip)
         sed -i "s/ansible_host: *[^#]*/ansible_host: ${public_ip} /" ../../Ansible/inventory.yml
-        sed -i "s/ansible_user: *[^#]*/ansible_user: ${uername} /" ../../Ansible/inventory.yml
+        sed -i "s/ansible_user: *[^#]*/ansible_user: ${username} /" ../../Ansible/inventory.yml
     fi
     cd "${origin_cwd}"
 }
