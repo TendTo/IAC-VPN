@@ -1,15 +1,12 @@
 # {{ ansible_managed }}
 [Interface]
-Address = {{ wireguard.client.vpn_addr }}/{{ wireguard.net | regex_replace('[^/]+/(\d+)', '\\1') }}
-PrivateKey = {{ wireguard.client.sk }}
+Address = {{ wireguard.clients[0].vpn_addr }}/{{ wireguard.net | regex_replace('[^/]+/(\d+)', '\\1') }}
+PrivateKey = {{ wireguard.clients[0].sk }}
 
-PostUp = ping -c1 10.0.0.1
+PostUp = ping -c1 {{ wireguard.server.vpn_addr }}
 
 [Peer]
 PublicKey = {{ wireguard.server.pk }}
-
 Endpoint = {{ hostvars['vpn_server']['ansible_host'] }}:{{ wireguard.server.port }}
-
-AllowedIPs = {{ '0.0.0.0/0' if wireguard.internet else wireguard.server.net }}
-
+AllowedIPs = {{ '0.0.0.0/0' if wireguard.internet else wireguard.net }}
 PersistentKeepalive = 25
