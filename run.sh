@@ -229,8 +229,8 @@ function fun_terraform() {
         chmod 600 "../../Ansible/${key_name}"
         username=$(terraform output -raw username)
         public_ip=$(terraform output -raw public_ip)
-        sed -i "s/ansible_host: *[^#]*/ansible_host: ${public_ip} /" ../../Ansible/inventory.yml
-        sed -i "s/ansible_user: *[^#]*/ansible_user: ${username} /" ../../Ansible/inventory.yml
+        sed -ri "s/ansible_host: *[0-9.]+/ansible_host: ${public_ip} /" ../../Ansible/inventory.yml
+        sed -ri "s/ansible_user: *[^#]*/ansible_user: ${username} /" ../../Ansible/inventory.yml
     fi
     cd "${origin_cwd}"
 }

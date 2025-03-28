@@ -4,7 +4,7 @@ all:
       ansible_host: 150.150.150.150 # server's public ip (populated automatically)
       ansible_user: ubuntu # server's user used for the ssh login
     vpn_client:
-      ansible_host: localhost # client's ip. Should be leaved to localhost if you want to use the script locally
+      ansible_host: localhost # client's ip. Should be left to localhost if you want to use the script locally
       ansible_connection: local # whether to setup the local machine as the vpn client
   vars:
     wireguard:

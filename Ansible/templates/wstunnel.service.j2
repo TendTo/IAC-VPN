@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Wstunnel for WireGuard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=root
+Type=exec
+ExecStart=/usr/local/bin/wstunnel server --restrict-to localhost:{{ wireguard.server.port }} wss://0.0.0.0:80
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

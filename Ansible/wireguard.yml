@@ -2,9 +2,41 @@
 - name: Install wireguard server
   hosts: vpn_server
 
+  handlers:
+    - name: reload systemctl
+      become: true
+      command: systemctl daemon-reload
+
   tasks:
     - name: Install wireguard
       ansible.builtin.include_tasks: shared.yml
+
+    - name: Download and extract wstunnel
+      become: true
+      ansible.builtin.unarchive:
+        src: https://github.com/erebe/wstunnel/releases/download/v10.1.10/wstunnel_10.1.10_linux_amd64.tar.gz
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: "0755"
+      when: wireguard.use_tcp
+
+    - name: Create wstunnel config
+      become: true
+      template: 
+        src: templates/wstunnel.service.j2
+        dest: /lib/systemd/system/wstunnel.service 
+        mode: "0644"
+      notify:
+        - reload systemctl
+      when: wireguard.use_tcp
+        
+    - name: Restart wstunnel and enable on boot
+      become: true
+      ansible.builtin.systemd:
+        name: wstunnel
+        enabled: true
+        state: restarted
+      when: wireguard.use_tcp
 
     - name: Wireguard config
       become: true
