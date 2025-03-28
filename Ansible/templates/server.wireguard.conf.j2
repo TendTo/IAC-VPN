@@ -6,6 +6,9 @@ PrivateKey = {{ wireguard.server.sk }}
 
 PostUp = iptables -I INPUT -m state --state NEW -p udp --dport {{ wireguard.server.port }} -j ACCEPT
 PostUP = iptables -I FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if wireguard.use_tcp %}
+PostUp = iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+{% endif %}
 {% if wireguard.internet %}
 PostUp = iptables -I FORWARD -i %i -o {{ wireguard.server.out_interface }} -j ACCEPT
 PostUp = iptables -I POSTROUTING -t nat -s {{ wireguard.net }} -o {{ wireguard.server.out_interface }} -j MASQUERADE
@@ -13,6 +16,9 @@ PostUp = iptables -I POSTROUTING -t nat -s {{ wireguard.net }} -o {{ wireguard.s
 
 PostDown = iptables -D INPUT -m state --state NEW -p udp --dport {{ wireguard.server.port }} -j ACCEPT
 PostDown = iptables -D FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if wireguard.use_tcp %}
+PostDown = iptables -D INPUT -p tcp --dport 80 -j ACCEPT
+{% endif %}
 {% if wireguard.internet %}
 PostDown = iptables -D FORWARD -i %i -o {{ wireguard.server.out_interface }} -j ACCEPT
 PostDown = iptables -t nat -D POSTROUTING -s {{ wireguard.net }} -o {{ wireguard.server.out_interface }} -j MASQUERADE

@@ -2,11 +2,18 @@
 [Interface]
 Address = {{ wireguard.clients[0].vpn_addr }}/{{ wireguard.net | regex_replace('[^/]+/(\d+)', '\\1') }}
 PrivateKey = {{ wireguard.clients[0].sk }}
+{% if wireguard.use_tcp %}
+MTU = 1420
+{% endif %}
 
 PostUp = ping -c1 {{ wireguard.server.vpn_addr }}
 
 [Peer]
 PublicKey = {{ wireguard.server.pk }}
+{% if wireguard.use_tcp %}
+Endpoint = localhost:{{ wireguard.server.port }}
+{% else %}
 Endpoint = {{ hostvars['vpn_server']['ansible_host'] }}:{{ wireguard.server.port }}
+{% endif %}
 AllowedIPs = {{ '0.0.0.0/0' if wireguard.internet else wireguard.net }}
 PersistentKeepalive = 25
